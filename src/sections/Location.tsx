@@ -85,7 +85,7 @@ export function Location() {
                       Rua das Flores, 123 - Centro
                       <br />
                       Abreu e Lima, PE - CEP: 53520-000
-n                    </p>
+                    </p>
                   </div>
                 </div>
 
