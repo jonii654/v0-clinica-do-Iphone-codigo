@@ -512,7 +512,7 @@ function MarqueeText({ text }: { text: string }) {
             .map((t, i) => (
               <span
                 key={i}
-                className="text-[15vw] md:text-[12vw] font-black tracking-tighter text-gray-100 select-none mx-4"
+                className="text-[12vw] md:text-[10vw] font-bold tracking-tighter text-gray-100/60 select-none mx-4"
               >
                 {t}
               </span>
@@ -562,14 +562,21 @@ export function Hero() {
       {/* Content Container */}
       <div className="relative z-10 w-full px-6 flex flex-col items-center">
         
-        {/* Title - Above iPhone */}
-        <h1
+        {/* Logo + Title - Above iPhone */}
+        <div
           ref={titleRef}
-          className="text-4xl md:text-6xl lg:text-7xl font-extralight text-gray-900 text-center mb-4"
+          className="flex flex-col items-center mb-4"
           style={{ opacity: 0 }}
         >
-          Clínica do <span className="text-brand-blue font-normal">iPhone</span>
-        </h1>
+          <img
+            src="/images/logo-clinica.jpg"
+            alt="Clinica do iPhone"
+            className="h-20 w-20 md:h-24 md:w-24 rounded-full object-cover mb-4 shadow-lg"
+          />
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extralight text-gray-900 text-center">
+            Clinica do <span className="text-brand-blue font-normal">iPhone</span>
+          </h1>
+        </div>
 
         {/* 3D iPhone - Center */}
         <div

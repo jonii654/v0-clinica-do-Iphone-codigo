@@ -77,41 +77,83 @@
 }
 
 @layer components {
-  /* Glass-Glow Button - Blue (Ação Geral) */
+  /* Glass-Glow Pill Button - Royal Blue */
   .btn-glass-blue {
-    @apply relative px-8 py-4 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(59, 130, 246, 0.4);
-    box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.5), 
-                0 0 5px rgba(59, 130, 246, 0.3);
-    color: white;
+    @apply relative inline-flex items-center gap-2 px-6 py-3 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.15) 0%, rgba(30, 58, 138, 0.05) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 58, 138, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05),
+                0 0 12px rgba(30, 58, 138, 0.15);
+    color: rgba(255, 255, 255, 0.95);
   }
   
   .btn-glass-blue:hover {
-    box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.7), 
-                0 0 10px rgba(59, 130, 246, 0.5);
-    border-color: rgba(59, 130, 246, 0.7);
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(30, 58, 138, 0.1) 100%);
+    border-color: rgba(30, 58, 138, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08),
+                inset 0 0 20px rgba(30, 58, 138, 0.2),
+                0 0 20px rgba(30, 58, 138, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Glass-Glow Pill Button - Royal Blue on LIGHT backgrounds */
+  .btn-glass-blue-light {
+    @apply relative inline-flex items-center gap-2 px-6 py-3 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(30, 58, 138, 0.03) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 58, 138, 0.25);
+    box-shadow: 0 0 12px rgba(30, 58, 138, 0.08);
+    color: #1E3A8A;
+  }
+  
+  .btn-glass-blue-light:hover {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.14) 0%, rgba(30, 58, 138, 0.06) 100%);
+    border-color: rgba(30, 58, 138, 0.45);
+    box-shadow: inset 0 0 16px rgba(30, 58, 138, 0.08),
+                0 0 20px rgba(30, 58, 138, 0.12);
     transform: translateY(-1px);
   }
   
-  /* Glass-Glow Button - Green (WhatsApp/Conversão) */
+  /* Glass-Glow Pill Button - Green (WhatsApp) */
   .btn-glass-green {
-    @apply relative px-8 py-4 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(37, 211, 102, 0.4);
-    box-shadow: inset 0 0 15px rgba(37, 211, 102, 0.5), 
-                0 0 5px rgba(37, 211, 102, 0.3);
-    color: white;
+    @apply relative inline-flex items-center gap-2 px-6 py-3 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(37, 211, 102, 0.05) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05),
+                0 0 12px rgba(37, 211, 102, 0.15);
+    color: rgba(255, 255, 255, 0.95);
   }
   
   .btn-glass-green:hover {
-    box-shadow: inset 0 0 20px rgba(37, 211, 102, 0.7), 
-                0 0 10px rgba(37, 211, 102, 0.5);
-    border-color: rgba(37, 211, 102, 0.7);
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.25) 0%, rgba(37, 211, 102, 0.1) 100%);
+    border-color: rgba(37, 211, 102, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08),
+                inset 0 0 20px rgba(37, 211, 102, 0.2),
+                0 0 20px rgba(37, 211, 102, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Glass-Glow Pill Button - Green on LIGHT backgrounds */
+  .btn-glass-green-light {
+    @apply relative inline-flex items-center gap-2 px-6 py-3 rounded-pill font-medium text-sm tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(37, 211, 102, 0.03) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(37, 211, 102, 0.25);
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.08);
+    color: #128C7E;
+  }
+  
+  .btn-glass-green-light:hover {
+    background: linear-gradient(135deg, rgba(37, 211, 102, 0.14) 0%, rgba(37, 211, 102, 0.06) 100%);
+    border-color: rgba(37, 211, 102, 0.45);
+    box-shadow: inset 0 0 16px rgba(37, 211, 102, 0.08),
+                0 0 20px rgba(37, 211, 102, 0.12);
     transform: translateY(-1px);
   }
   
@@ -178,11 +220,11 @@
   
   /* Section Spacing */
   .section-padding {
-    @apply py-20 md:py-32 lg:py-40;
+    @apply py-16 md:py-24 lg:py-28;
   }
   
   .section-padding-sm {
-    @apply py-12 md:py-20;
+    @apply py-10 md:py-16;
   }
   
   /* Typography */

@@ -130,7 +130,7 @@ export function CartDrawer() {
               </p>
               <button
                 onClick={closeCart}
-                className="btn-glass-blue"
+                className="btn-glass-blue-light"
               >
                 Ver Produtos
               </button>
@@ -224,7 +224,7 @@ export function CartDrawer() {
             {/* Checkout Button */}
             <button
               onClick={handleCheckout}
-              className="btn-glass-green w-full flex items-center justify-center gap-2"
+              className="btn-glass-green-light w-full justify-center"
             >
               <MessageCircle className="w-4 h-4" />
               Finalizar no WhatsApp

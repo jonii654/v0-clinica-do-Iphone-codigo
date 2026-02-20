@@ -78,9 +78,14 @@ export function Footer() {
             </div>
 
             {/* Brand */}
-            <div className="text-center mt-8">
+            <div className="flex flex-col items-center mt-8">
+              <img
+                src="/images/logo-clinica.jpg"
+                alt="Clinica do iPhone"
+                className="h-14 w-14 rounded-full object-cover mb-3"
+              />
               <p className="text-sm font-extralight text-gray-400">
-                Clínica do <span className="text-brand-blue">iPhone</span>
+                Clinica do <span className="text-brand-blue">iPhone</span>
               </p>
               <p className="text-xs text-gray-300 mt-1">
                 Abreu e Lima, PE

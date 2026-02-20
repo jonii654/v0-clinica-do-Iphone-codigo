@@ -181,10 +181,10 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
           {/* Add to Cart Button */}
           <button
             onClick={handleAddToCart}
-            className="btn-glass-green w-full mt-4 flex items-center justify-center gap-2"
+            className="btn-glass-blue w-full mt-4 justify-center"
           >
             <Plus className="w-4 h-4" />
-            Adicionar à Sacola
+            Adicionar
           </button>
         </div>
       </div>
@@ -254,7 +254,7 @@ export function Products() {
     <section
       id="produtos"
       ref={sectionRef}
-      className="section-padding bg-dark-secondary"
+      className="section-padding bg-[#111114]"
     >
       <div className="w-full">
         {/* Section Header */}
@@ -321,7 +321,7 @@ export function Products() {
             href="https://wa.me/5581999999999"
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-glass-blue inline-block"
+            className="btn-glass-blue"
           >
             Consultar Disponibilidade
           </a>

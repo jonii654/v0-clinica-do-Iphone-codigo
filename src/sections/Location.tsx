@@ -129,7 +129,7 @@ export function Location() {
                     href="https://wa.me/5581999999999"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-glass-green flex items-center justify-center gap-2"
+                    className="btn-glass-green-light justify-center"
                   >
                     <Phone className="w-4 h-4" />
                     Chamar no WhatsApp
@@ -138,7 +138,7 @@ export function Location() {
                     href="https://maps.google.com/?q=Abreu+e+Lima+PE"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-glass-blue flex items-center justify-center gap-2"
+                    className="btn-glass-blue-light justify-center"
                   >
                     <Navigation className="w-4 h-4" />
                     Como Chegar

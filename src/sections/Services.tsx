@@ -173,14 +173,14 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         {/* Hidden Button */}
         <button
           ref={buttonRef}
-          className="btn-glass-blue mt-6 w-full opacity-0"
+          className={`${isDark ? 'btn-glass-blue' : 'btn-glass-blue-light'} mt-6 w-full justify-center opacity-0`}
           style={{ transform: 'translateY(10px)' }}
           onClick={(e) => {
             e.stopPropagation();
             window.open('https://wa.me/5581999999999', '_blank');
           }}
         >
-          AGENDAR REPARO →
+          Agendar Reparo
         </button>
       </div>
     </div>

@@ -153,7 +153,7 @@ export function ScreenShowcase() {
               href="https://wa.me/5581999999999"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-glass-blue inline-block"
+              className="btn-glass-blue-light"
             >
               Solicitar Orçamento
             </a>

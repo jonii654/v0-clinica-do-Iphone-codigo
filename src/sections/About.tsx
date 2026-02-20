@@ -27,7 +27,7 @@ function NeonMarquee({ text, reverse = false }: { text: string; reverse?: boolea
   }, [reverse]);
 
   return (
-    <div className="overflow-hidden whitespace-nowrap py-4 bg-black">
+    <div className="overflow-hidden whitespace-nowrap py-3 bg-brand-blue/5 border-y border-brand-blue/10">
       <div ref={containerRef} className="inline-flex">
         <div className="neon-marquee-content flex items-center">
           {Array(6)
@@ -35,7 +35,7 @@ function NeonMarquee({ text, reverse = false }: { text: string; reverse?: boolea
             .map((t, i) => (
               <span
                 key={i}
-                className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mx-8 text-neon-blue"
+                className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mx-8 text-brand-blue/30"
               >
                 {t}
               </span>
