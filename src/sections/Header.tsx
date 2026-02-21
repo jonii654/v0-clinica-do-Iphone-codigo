@@ -85,13 +85,16 @@ export function Header() {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="absolute left-1/2 -translate-x-1/2"
+              className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2"
             >
               <img
                 src="/images/logo-clinica.jpg"
                 alt="Clinica do iPhone"
-                className="h-10 md:h-12 w-auto rounded-full object-cover"
+                className="h-8 md:h-9 w-8 md:w-9 rounded-full object-cover"
               />
+              <span className="hidden sm:inline text-sm font-light tracking-wide text-gray-800">
+                Clinica do <span className="text-brand-blue font-normal">iPhone</span>
+              </span>
             </a>
 
             {/* Desktop Navigation - Right */}
