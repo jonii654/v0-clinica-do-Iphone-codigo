@@ -83,12 +83,10 @@ function CameraModule({ position }: { position: [number, number, number] }) {
           </mesh>
         </group>
       ))}
-      {/* Flash */}
       <mesh position={[0.27, -0.27, -0.035]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.055, 0.055, 0.025, 12]} />
         <meshStandardMaterial color="#ffeecc" emissive="#ffeecc" emissiveIntensity={0.08} />
       </mesh>
-      {/* LiDAR */}
       <mesh position={[0, -0.02, -0.035]} rotation={[Math.PI / 2, 0, 0]}>
         <cylinderGeometry args={[0.035, 0.035, 0.015, 12]} />
         <meshStandardMaterial color="#080808" metalness={0.9} roughness={0.06} />
@@ -97,7 +95,7 @@ function CameraModule({ position }: { position: [number, number, number] }) {
   );
 }
 
-// ─── Apple logo shape ────────────────────────────────────────────
+// ─── Apple logo ──────────────────────────────────────────────────
 
 function AppleLogo({ position }: { position: [number, number, number] }) {
   const geo = useMemo(() => {
@@ -120,58 +118,173 @@ function AppleLogo({ position }: { position: [number, number, number] }) {
   );
 }
 
-// ─── iPhone model ────────────────────────────────────────────────
+// ─── Screen texture (vivid, looks like a real lit iPhone) ────────
 
-function IPhoneModel() {
-  const groupRef = useRef<THREE.Group>(null);
-  const W = 2.5, H = 5.2, D = 0.26, R = 0.4;
-
-  const screenTexture = useMemo(() => {
+function useScreenTexture() {
+  return useMemo(() => {
     const c = document.createElement('canvas');
     c.width = 512; c.height = 1024;
     const ctx = c.getContext('2d')!;
-    const g = ctx.createLinearGradient(0, 0, 512, 1024);
-    g.addColorStop(0, '#060014'); g.addColorStop(0.25, '#12042e');
-    g.addColorStop(0.45, '#280856'); g.addColorStop(0.6, '#4a1578');
-    g.addColorStop(0.75, '#782468'); g.addColorStop(0.9, '#a03858');
-    g.addColorStop(1, '#060014');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 1024);
 
-    ctx.save(); ctx.globalCompositeOperation = 'screen';
-    ctx.translate(256, 380); ctx.rotate(-0.45);
-    const s1 = ctx.createRadialGradient(0, 0, 0, 0, 0, 250);
-    s1.addColorStop(0, 'rgba(255,90,160,0.6)');
-    s1.addColorStop(0.5, 'rgba(180,50,130,0.2)');
-    s1.addColorStop(1, 'rgba(80,15,60,0)');
-    ctx.fillStyle = s1; ctx.fillRect(-280, -120, 560, 240);
+    // Rich deep wallpaper gradient
+    const bg = ctx.createLinearGradient(0, 0, 512, 1024);
+    bg.addColorStop(0, '#0B0033');
+    bg.addColorStop(0.15, '#140840');
+    bg.addColorStop(0.3, '#220E60');
+    bg.addColorStop(0.5, '#3A1680');
+    bg.addColorStop(0.65, '#6B2090');
+    bg.addColorStop(0.8, '#A03060');
+    bg.addColorStop(1, '#0B0033');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, 512, 1024);
+
+    // Flowing light effects
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+
+    // Main light sweep
+    ctx.save();
+    ctx.translate(280, 350);
+    ctx.rotate(-0.4);
+    const s1 = ctx.createRadialGradient(0, 0, 0, 0, 0, 280);
+    s1.addColorStop(0, 'rgba(255, 80, 180, 0.65)');
+    s1.addColorStop(0.4, 'rgba(200, 50, 140, 0.25)');
+    s1.addColorStop(1, 'rgba(100, 20, 70, 0)');
+    ctx.fillStyle = s1;
+    ctx.fillRect(-300, -150, 600, 300);
     ctx.restore();
 
-    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-    ctx.font = 'bold 17px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('9:41', 256, 68);
+    // Secondary glow
+    ctx.save();
+    ctx.translate(180, 600);
+    const s2 = ctx.createRadialGradient(0, 0, 0, 0, 0, 200);
+    s2.addColorStop(0, 'rgba(100, 50, 255, 0.4)');
+    s2.addColorStop(0.5, 'rgba(60, 30, 180, 0.15)');
+    s2.addColorStop(1, 'rgba(30, 10, 100, 0)');
+    ctx.fillStyle = s2;
+    ctx.fillRect(-200, -200, 400, 400);
+    ctx.restore();
+
+    ctx.restore();
+
+    // ─── Status bar ───
+    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.font = 'bold 16px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('9:41', 256, 62);
+
+    // Signal bars
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    for (let i = 0; i < 4; i++) {
+      const bH = 5 + i * 3;
+      ctx.fillRect(35 + i * 6, 56 - bH, 4, bH);
+    }
+
+    // Battery
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.beginPath();
+    ctx.roundRect(440, 47, 28, 14, 3);
+    ctx.fill();
+    ctx.fillRect(468, 51, 3, 6);
+    ctx.fillStyle = '#25D366';
+    ctx.beginPath();
+    ctx.roundRect(442, 49, 24, 10, 2);
+    ctx.fill();
+
+    // ─── Time display (lock screen style) ───
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.font = '200 80px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('9:41', 256, 290);
+
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '300 17px -apple-system, sans-serif';
+    ctx.fillText('sexta-feira, 21 de fevereiro', 256, 325);
+
+    // ─── Fake notification cards ───
+    const drawNotif = (y: number, app: string, text: string, color: string) => {
+      // Card bg
+      ctx.fillStyle = 'rgba(255,255,255,0.12)';
+      ctx.beginPath();
+      ctx.roundRect(30, y, 452, 68, 16);
+      ctx.fill();
+
+      // App icon dot
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(62, y + 24, 14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // App name
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.font = 'bold 13px -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(app, 84, y + 28);
+
+      // Time
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.font = '12px -apple-system, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('agora', 462, y + 28);
+
+      // Message
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = '13px -apple-system, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(text, 62, y + 52);
+    };
+
+    drawNotif(410, 'WhatsApp', 'Seu iPhone esta pronto para retirada!', '#25D366');
+    drawNotif(490, 'Instagram', 'clinica.do.iphone publicou uma foto', '#E1306C');
+    drawNotif(570, 'Mail', 'Nota fiscal do servico - Clinica do iPhone', '#007AFF');
+
+    // ─── Bottom widgets area ───
+    // Flashlight icon
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.beginPath();
+    ctx.roundRect(48, 910, 50, 50, 14);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = '22px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('T', 73, 943);
+
+    // Camera icon
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.beginPath();
+    ctx.roundRect(414, 910, 50, 50, 14);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = '22px -apple-system, sans-serif';
+    ctx.fillText('O', 439, 943);
+
+    // Home indicator
     ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '100 68px sans-serif'; ctx.fillText('9:41', 256, 320);
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '300 18px sans-serif';
-    ctx.fillText('Sexta-feira, 21 de fevereiro', 256, 355);
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.beginPath(); ctx.roundRect(200, 982, 112, 4, 2); ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(196, 986, 120, 5, 3);
+    ctx.fill();
 
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
   }, []);
+}
 
-  const backTexture = useMemo(() => {
+// ─── Back texture ────────────────────────────────────────────────
+
+function useBackTexture() {
+  return useMemo(() => {
     const c = document.createElement('canvas');
     c.width = 512; c.height = 1024;
     const ctx = c.getContext('2d')!;
     const g = ctx.createLinearGradient(0, 0, 0, 1024);
-    g.addColorStop(0, '#1c1c20'); g.addColorStop(0.3, '#1e1e22');
-    g.addColorStop(0.7, '#1a1a1e'); g.addColorStop(1, '#161618');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, 512, 1024);
+    g.addColorStop(0, '#1c1c20');
+    g.addColorStop(0.5, '#1e1e22');
+    g.addColorStop(1, '#161618');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 512, 1024);
 
-    // Subtle horizontal lines for brushed titanium look
+    // Brushed titanium lines
     ctx.strokeStyle = 'rgba(255,255,255,0.006)';
     ctx.lineWidth = 0.5;
     for (let y = 0; y < 1024; y += 3) {
@@ -179,21 +292,32 @@ function IPhoneModel() {
     }
 
     // Shimmer
-    const shimmer = ctx.createLinearGradient(100, 300, 400, 700);
-    shimmer.addColorStop(0, 'rgba(255,255,255,0)');
-    shimmer.addColorStop(0.5, 'rgba(255,255,255,0.018)');
-    shimmer.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = shimmer; ctx.fillRect(0, 200, 512, 600);
+    const sh = ctx.createLinearGradient(100, 300, 400, 700);
+    sh.addColorStop(0, 'rgba(255,255,255,0)');
+    sh.addColorStop(0.5, 'rgba(255,255,255,0.018)');
+    sh.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = sh;
+    ctx.fillRect(0, 200, 512, 600);
 
     // iPhone text
     ctx.fillStyle = 'rgba(160,160,160,0.18)';
     ctx.font = '300 13px -apple-system, sans-serif';
-    ctx.textAlign = 'center'; ctx.fillText('iPhone', 256, 920);
+    ctx.textAlign = 'center';
+    ctx.fillText('iPhone', 256, 920);
 
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
   }, []);
+}
+
+// ─── iPhone model ────────────────────────────────────────────────
+
+function IPhoneModel() {
+  const groupRef = useRef<THREE.Group>(null);
+  const W = 2.5, H = 5.2, D = 0.26, R = 0.4;
+  const screenTexture = useScreenTexture();
+  const backTexture = useBackTexture();
 
   useFrame((_, delta) => {
     if (groupRef.current) groupRef.current.rotation.y += delta * 0.4;
@@ -201,7 +325,6 @@ function IPhoneModel() {
 
   return (
     <group ref={groupRef} position={[0, 0, 0]} rotation={[0.08, 0, 0]}>
-      {/* Titanium frame band */}
       <FrameBand width={W} height={H} depth={D} radius={R} thickness={0.055} />
 
       {/* Front glass */}
@@ -209,7 +332,7 @@ function IPhoneModel() {
         <meshStandardMaterial color="#040404" metalness={0.1} roughness={0.06} />
       </FlatRoundedRect>
 
-      {/* Screen */}
+      {/* Screen - vivid lit display */}
       <FlatRoundedRect width={W - 0.14} height={H - 0.14} radius={R - 0.08} position={[0, 0, D / 2 + 0.025]}>
         <meshBasicMaterial map={screenTexture} toneMapped={false} />
       </FlatRoundedRect>
@@ -225,10 +348,7 @@ function IPhoneModel() {
         <meshStandardMaterial map={backTexture} metalness={0.35} roughness={0.18} />
       </FlatRoundedRect>
 
-      {/* Camera */}
       <CameraModule position={[-0.55, H / 2 - 0.95, -(D / 2 + 0.025)]} />
-
-      {/* Apple logo */}
       <AppleLogo position={[0, 0.15, -(D / 2 + 0.024)]} />
 
       {/* Side buttons */}
@@ -313,22 +433,16 @@ function WindLines() {
   );
 }
 
-// ─── 3D Scene (no Environment = no HDR fetch = fast load) ────────
+// ─── 3D Scene ────────────────────────────────────────────────────
 
 function IPhoneScene() {
   return (
     <>
-      {/* Key light */}
       <directionalLight position={[5, 8, 5]} intensity={2} color="#ffffff" />
-      {/* Fill light */}
       <directionalLight position={[-4, -2, -4]} intensity={0.5} color="#c8d4ff" />
-      {/* Rim light for metallic highlights */}
       <directionalLight position={[-2, 4, -6]} intensity={0.8} color="#e0e8ff" />
-      {/* Top spotlight */}
-      <spotLight position={[0, 6, 4]} angle={0.4} penumbra={0.6} intensity={1.5} color="#ffffff" />
-      {/* Ambient fill */}
-      <ambientLight intensity={0.3} />
-      {/* Accent from below */}
+      <spotLight position={[0, 6, 4]} angle={0.4} penumbra={0.6} intensity={1.5} />
+      <ambientLight intensity={0.35} />
       <pointLight position={[0, -4, 3]} intensity={0.3} color="#dde4ff" />
       <IPhoneModel />
       <WindLines />
@@ -345,25 +459,25 @@ export function Hero() {
   const [showCanvas, setShowCanvas] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowCanvas(true), 50);
+    const t = setTimeout(() => setShowCanvas(true), 80);
     return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 0.05 });
+    const tl = gsap.timeline({ delay: 0.1 });
     if (titleRef.current) {
-      tl.fromTo(titleRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' });
+      tl.fromTo(titleRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
     }
     if (canvasRef.current) {
-      tl.fromTo(canvasRef.current, { opacity: 0, scale: 0.97 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, '-=0.15');
+      tl.fromTo(canvasRef.current, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' }, '-=0.2');
     }
     if (phrasesRef.current) {
       const items = phrasesRef.current.querySelectorAll('.phrase-item');
       items.forEach((item, i) => {
         tl.fromTo(item,
-          { opacity: 0, y: 16, rotateX: -25 },
+          { opacity: 0, y: 14, rotateX: -20 },
           { opacity: 1, y: 0, rotateX: 0, duration: 0.35, ease: 'back.out(1.4)' },
-          `-=${i === 0 ? 0 : 0.2}`
+          `-=${i === 0 ? 0 : 0.18}`
         );
       });
     }
@@ -377,25 +491,27 @@ export function Hero() {
   ];
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-white">
+    <section className="relative w-full min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-white">
       {/* Subtle radial accent */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-[0.025]"
-          style={{ background: 'radial-gradient(circle, #1E3A8A 0%, transparent 70%)' }} />
+        <div
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] md:w-[600px] h-[400px] md:h-[600px] rounded-full opacity-[0.025]"
+          style={{ background: 'radial-gradient(circle, #1E3A8A 0%, transparent 70%)' }}
+        />
       </div>
 
-      {/* Facade scrolling text - single line, SLOW */}
+      {/* Facade scrolling text */}
       <div className="absolute inset-0 flex items-center pointer-events-none select-none z-[1] overflow-hidden">
-        <div className="flex whitespace-nowrap will-change-transform" style={{ animation: 'facade-scroll 30s linear infinite' }}>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <span key={i} className="text-[18vw] md:text-[13vw] lg:text-[10vw] font-black tracking-tight mx-10"
-              style={{ color: 'rgba(30, 58, 138, 0.05)' }}>
+        <div className="flex whitespace-nowrap will-change-transform" style={{ animation: 'facade-scroll 35s linear infinite' }}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} className="text-[15vw] md:text-[11vw] lg:text-[9vw] font-black tracking-tight mx-8 md:mx-12"
+              style={{ color: 'rgba(30, 58, 138, 0.04)' }}>
               QUALIDADE E AQUI
             </span>
           ))}
-          {Array.from({ length: 6 }).map((_, i) => (
-            <span key={`d${i}`} className="text-[18vw] md:text-[13vw] lg:text-[10vw] font-black tracking-tight mx-10"
-              style={{ color: 'rgba(30, 58, 138, 0.05)' }}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={`d${i}`} className="text-[15vw] md:text-[11vw] lg:text-[9vw] font-black tracking-tight mx-8 md:mx-12"
+              style={{ color: 'rgba(30, 58, 138, 0.04)' }}>
               QUALIDADE E AQUI
             </span>
           ))}
@@ -403,14 +519,22 @@ export function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-full px-6 flex flex-col items-center pt-24 md:pt-28">
+      <div className="relative z-10 w-full px-4 md:px-6 flex flex-col items-center pt-20 md:pt-28">
         {/* Title */}
-        <h1 ref={titleRef} className="text-4xl md:text-6xl lg:text-7xl font-extralight text-gray-900 text-center mb-2 text-balance" style={{ opacity: 0 }}>
+        <h1
+          ref={titleRef}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-extralight text-gray-900 text-center mb-1 md:mb-2 text-balance"
+          style={{ opacity: 0 }}
+        >
           Clinica do <span className="text-brand-blue font-normal">iPhone</span>
         </h1>
 
-        {/* 3D iPhone */}
-        <div ref={canvasRef} className="w-full max-w-[340px] md:max-w-[400px] lg:max-w-[440px] h-[440px] md:h-[520px] lg:h-[580px] my-2" style={{ opacity: 0 }}>
+        {/* 3D iPhone -- smaller on mobile, full on desktop, fov wide enough to not clip */}
+        <div
+          ref={canvasRef}
+          className="w-full max-w-[260px] sm:max-w-[300px] md:max-w-[380px] lg:max-w-[440px] h-[340px] sm:h-[380px] md:h-[480px] lg:h-[560px] my-1 md:my-2"
+          style={{ opacity: 0 }}
+        >
           {showCanvas ? (
             <Suspense fallback={
               <div className="w-full h-full flex items-center justify-center">
@@ -418,8 +542,14 @@ export function Hero() {
               </div>
             }>
               <Canvas
-                camera={{ position: [0, 0, 7], fov: 42 }}
-                gl={{ alpha: true, antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.1, powerPreference: 'high-performance' }}
+                camera={{ position: [0, 0, 8.5], fov: 38 }}
+                gl={{
+                  alpha: true,
+                  antialias: true,
+                  toneMapping: THREE.ACESFilmicToneMapping,
+                  toneMappingExposure: 1.1,
+                  powerPreference: 'high-performance',
+                }}
                 style={{ background: 'transparent' }}
                 dpr={[1, 1.5]}
               >
@@ -434,19 +564,23 @@ export function Hero() {
         </div>
 
         {/* Domino cascade phrases */}
-        <div ref={phrasesRef} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-xl mt-2 mb-6" style={{ perspective: '600px' }}>
+        <div
+          ref={phrasesRef}
+          className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-x-3 gap-y-1.5 sm:gap-y-2 max-w-xl mt-1 mb-4 md:mb-6 px-2"
+          style={{ perspective: '600px' }}
+        >
           {phrases.map((p, i) => (
-            <span key={i} className="phrase-item text-sm md:text-base font-light tracking-wide" style={{ color: p.color, opacity: 0, display: 'inline-block' }}>
+            <span key={i} className="phrase-item text-xs sm:text-sm md:text-base font-light tracking-wide text-center" style={{ color: p.color, opacity: 0, display: 'inline-block' }}>
               {p.text}
-              {i < phrases.length - 1 && <span className="ml-3 text-gray-300">|</span>}
+              {i < phrases.length - 1 && <span className="ml-2 sm:ml-3 text-gray-300 hidden sm:inline">|</span>}
             </span>
           ))}
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
-        <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 animate-bounce">
+        <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>
